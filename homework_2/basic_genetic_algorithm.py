@@ -13,20 +13,14 @@ def f_booth(x, y):
     return np.power(x + 2 * y - 7, 2) + np.power(2 * x + y - 5, 2)
 
 
-def f_rand(a, b):
-    """
-    Returns uniformly distributed random in range [a, b)
-    """
-    return a + np.random.rand() * (b - a)
-
-
 def generate_pairs(x, num_of_pairs):
     """
     Returns list which consist of num_of_pairs pairs of X list elements
     """
     pairs = []
     for _ in range(num_of_pairs):
-        element = [x[int(f_rand(0, len(x)))], x[int(f_rand(0, len(x)))]]
+        # element = [x[int(f_rand(0, len(x)))], x[int(f_rand(0, len(x)))]]
+        element = [x[np.random.randint(0, len(x))], x[np.random.randint(0, len(x))]]
         pairs.append(element)
     return pairs
 
@@ -40,10 +34,24 @@ def generate_true(p):
         return True
     return False
 
-num_of_iterations = 10000
-NP = 1000
+
+def plot_init_and_final_2D_vectors(init_list, final_list):
+    """
+    Plots two graphs - init vectors and final vectors
+    """
+    init = np.array(init_list)
+    final = np.array(final_list)
+    f, axarr = plt.subplots(2, sharex=True)
+    axarr[0].scatter(init[:, 0], init[:, 1])
+    axarr[0].set_title("Initial vectors")
+    axarr[1].scatter(final[:, 0], final[:, 1])
+    axarr[1].set_title("Final vectors")
+
+
+num_of_iterations = 1000
+NP = 400
 # generate random vectors - input date
-X = np.random.rand(NP, 2, 1)
+X = np.random.uniform(low=-10, high=10,size=(NP, 2, 1))
 # crossover
 prob_cross = 0.5
 XX = X
@@ -66,21 +74,21 @@ for k in range(num_of_iterations):
     # contains half of selected parents
     half_list = []
     for _ in range(int(len(XX) / 2)):
-        half_list.append(XX[int(f_rand(0, len(XX)))])
+        half_list.append(XX[np.random.randint(0, len(XX))])
 
     crossed_list += half_list
 
-    # for index, value in enumerate(crossed_list):
-    #     print("{}, {}, {}".format(index, value, value.shape))
-
     # mutation step
     # mutation probability in [0.001, 0.5]
-    prob_mutation = 0.01
+    prob_mutation = 0.1
     epsilon = 0.1
     for i, el in enumerate(crossed_list):
         for ii, elel in enumerate(el):
             if generate_true(prob_mutation):
-                crossed_list[i][ii] += epsilon
+                if generate_true(0.5):
+                    crossed_list[i][ii] += epsilon
+                else:
+                    crossed_list[i][ii] -= epsilon
 
     # selection step
     # generate NP pairs
@@ -99,3 +107,5 @@ for idx, el in enumerate(final_list):
         index_of_optimum = idx
 # print(final_list)
 print(final_list[index_of_optimum])
+plot_init_and_final_2D_vectors(X, final_list)
+plt.show()
