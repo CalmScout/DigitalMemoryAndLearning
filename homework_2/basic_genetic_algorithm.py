@@ -41,15 +41,15 @@ def plot_init_and_final_2D_vectors(init_list, final_list):
     """
     init = np.array(init_list)
     final = np.array(final_list)
-    f, axarr = plt.subplots(2, sharex=True)
+    f, axarr = plt.subplots(2)
     axarr[0].scatter(init[:, 0], init[:, 1])
     axarr[0].set_title("Initial vectors")
     axarr[1].scatter(final[:, 0], final[:, 1])
     axarr[1].set_title("Final vectors")
 
 
-num_of_iterations = 1000
-NP = 400
+num_of_iterations = 100
+NP = 1000
 # generate random vectors - input date
 X = np.random.uniform(low=-10, high=10,size=(NP, 2, 1))
 # crossover
